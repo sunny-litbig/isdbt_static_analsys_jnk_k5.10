@@ -1,0 +1,62 @@
+/*******************************************************************************
+
+*   Copyright (c) Telechips Inc.
+
+
+*   TCC Version 1.0
+
+This source code contains confidential information of Telechips.
+
+Any unauthorized use without a written permission of Telechips including not
+limited to re-distribution in source or binary form is strictly prohibited.
+
+This source code is provided "AS IS" and nothing contained in this source code
+shall constitute any express or implied warranty of any kind, including without
+limitation, any warranty of merchantability, fitness for a particular purpose
+or non-infringement of any patent, copyright or other third party intellectual
+property right.
+No warranty is made, express or implied, regarding the information's accuracy,
+completeness, or performance.
+
+In no event shall Telechips be liable for any claim, damages or other
+liability arising from, out of or in connection with this source code or
+the use in the source code.
+
+This source code is provided subject to the terms of a Mutual Non-Disclosure
+Agreement between Telechips and Company.
+*
+*******************************************************************************/
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <pthread.h>
+#include <time.h> //for struct timespec, CLOCK_MONOTONIC
+
+int tcc_pthread_cond_init(pthread_cond_t *cond,
+						const pthread_condattr_t *attr)
+{
+	int ret = 0;
+#if defined(HAVE_LINUX_PLATFORM)
+	pthread_condattr_t attribute;
+	pthread_condattr_init(&attribute);
+	pthread_condattr_setclock(&attribute, CLOCK_MONOTONIC);
+	ret = pthread_cond_init(cond, &attribute);
+	pthread_condattr_destroy(&attribute);
+#endif
+	return ret;
+}
+
+int tcc_pthread_cond_timedwait(pthread_cond_t *cond,
+							pthread_mutex_t * mutex,
+							const struct timespec *abstime)
+{
+	int ret = 0;
+#if defined(HAVE_LINUX_PLATFORM)
+	ret = pthread_cond_timedwait(cond, mutex, abstime);
+#endif
+	return ret;
+}
+#ifdef __cplusplus
+}
+#endif

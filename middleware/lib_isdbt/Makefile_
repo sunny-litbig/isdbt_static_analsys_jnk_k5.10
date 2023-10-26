@@ -1,0 +1,232 @@
+#########################################################
+#
+#	Telechips Linux Platform ISDBT Library Make File
+#
+#########################################################
+
+#########################################################
+#	Telechips Make File Initialize
+#########################################################
+# middleware/lib_isdbt
+TOP := ../../linux/
+
+#########################################################
+#	Read Telechips Linux Configuration File 
+#########################################################
+include $(TOP)config
+
+#########################################################
+#	Read Telechips Linux make rules File 
+#########################################################
+include $(TOP)rule.mk
+
+#########################################################
+#	Common Definitions
+#########################################################
+include $(TOP)common.mk
+
+#########################################################
+#	Common Path Include   
+#########################################################
+include $(BUILD_SYSTEM)basic_path.mk
+
+#########################################################
+#	Read  define file  
+#########################################################
+include	$(BUILD_SYSTEM)definition.mk
+
+#########################################################
+#	Reset Variable  
+#########################################################
+include $(RESET_VARS)
+
+#########################################################
+#	Version Set  
+#########################################################
+LOCAL_VERSION_MAJOR:=00
+LOCAL_VERSION_MINOR:=01
+LOCAL_VERSION := _$(LOCAL_VERSION_MAJOR).$(LOCAL_VERSION_MINOR)
+
+#########################################################
+#	Set Current Folder and Global Path 
+#########################################################
+LOCAL_PATH :=./
+LOCAL_SRC_PATH	:=./src/
+
+#########################################################
+#	Setting Target Folder 
+#########################################################
+TARGET_FOLDER := ./
+
+LOCAL_MW_COMMON_PATH := ../common/
+
+#########################################################
+#	Setting  Target Name 
+#########################################################
+STATIC	:=.a
+SHARED	:=.so
+LOCAL_TARGET := libisdbt
+
+
+#########################################################
+#	Setting Sub Directory 
+#########################################################
+LOCAL_SUB_DIR :=
+
+LOCAL_SUB_DIR += $(LOCAL_MW_COMMON_PATH)dxb_utils
+LOCAL_SUB_DIR += $(LOCAL_MW_COMMON_PATH)dxb_font
+
+
+LOCAL_SUB_DIR += $(LOCAL_SRC_PATH)font
+LOCAL_SUB_DIR += $(LOCAL_SRC_PATH)region
+
+
+#########################################################
+#	Add  Src File 
+#########################################################
+LOCAL_SRC_FILES :=
+
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)tcc_isdbt_proc.cpp
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)tcc_isdbt_event.cpp
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParser_EPG.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT_ChannelDb.cpp
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT_EPGDb.cpp
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT_DBLayer.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT_ParentalRate.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT_MailDb.cpp
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT_SI.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)manager/tcc_isdbt_manager_tuner.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)manager/tcc_isdbt_manager_demux.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)manager/tcc_isdbt_manager_audio.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)manager/tcc_isdbt_manager_video.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)manager/tcc_isdbt_manager_cas.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)manager/tcc_isdbt_manager_demux_subtitle.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)player/ISDBTPlayer.cpp
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/TsParse_ISDBT_PngDec.c
+LOCAL_SRC_FILES += $(LOCAL_SRC_PATH)middleware/log_signal.c
+
+
+#########################################################
+#	Add  Header Path 
+#########################################################
+LOCAL_INCLUDE_HEADERS := 								
+
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)include
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)include/middleware
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)include/player
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)include/manager
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)lib/isdbt_subtitle/include
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)lib/isdbt_trmp/include
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)lib/isdbt_trmp/client/include
+LOCAL_INCLUDE_HEADERS += $(LOCAL_PATH)src/region/include
+LOCAL_INCLUDE_HEADERS += $(SYSTEM_INCLUDE)sqlite #external/sqlite/dist
+#LOCAL_INCLUDE_HEADERS += external/skia/include/core
+#LOCAL_INCLUDE_HEADERS += $(TCCDXB_TOP)middleware/common/dxb_font/include
+LOCAL_INCLUDE_HEADERS += $(TCCDXB_TOP)middleware/common/dxb_utils/include
+LOCAL_INCLUDE_HEADERS += $(TCCDXB_TOP)middleware/common/dxb_tsdecoder/include
+LOCAL_INCLUDE_HEADERS += $(TCCDXB_TOP)middleware/common/dxb_sc/include
+LOCAL_INCLUDE_HEADERS += $(TCCDXB_TOP)middleware/common/dxb_cipher/include
+LOCAL_INCLUDE_HEADERS += $(TCCDXB_TOP)middleware/common/dxb_png/include
+LOCAL_INCLUDE_HEADERS += $(TCCDXB_TOP)framework/dxb_interface/include/interface 
+LOCAL_INCLUDE_HEADERS += $(DXB_C_INCLUDES)
+
+
+#########################################################
+#	Add  local cflag  
+#########################################################
+LOCAL_CFLAGS :=
+LOCAL_CFLAGS += -fPIC
+#LOCAL_CFLAGS += -DBCAS_INCLUDE
+
+ifeq ($(SUPPORT_SUBTITLE),Y)
+LOCAL_CFLAGS += -DSUPPORT_SUBTITLE
+endif
+
+LOCAL_CXXFLAGS = $(LOCAL_CFLAGS)
+
+#########################################################
+#	Add  Lib Path
+#########################################################
+LOCAL_LDFLAGS := -lstdc++
+
+
+#########################################################
+#	Add  shared lib  
+#########################################################
+LOCAL_SHARED_LIB :=
+
+
+#########################################################
+#	Add  copy lib  
+#########################################################
+LOCAL_COPY_LIB :=
+
+
+#########################################################
+#	Add  static lib  
+#########################################################
+LOCAL_STATIC_LIB :=
+
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libpmap.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libproperties.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libdxbos.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libdxbfont.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libdxbcipher.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libdxbsc.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libdxbutils.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libisdbt_font.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libisdbt_region.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libisdbt_trmp.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libTCCDxBInterface.so
+LOCAL_STATIC_LIB += $(COPY_TO_LIB_PATH)libsqlite3.so
+
+LOCAL_STATIC_LIB += $(LOCAL_MW_COMMON_PATH)dxb_tsdecoder/lib/libTSDecoder_linux.a
+LOCAL_STATIC_LIB += $(LOCAL_MW_COMMON_PATH)dxb_png/lib/TCCxxxx_PNG_DEC_LIB_ANDROID_V200.a
+LOCAL_STATIC_LIB += lib/isdbt_subtitle/libisdbt_subtitle.a
+
+
+#########################################################
+#	Build Objects
+#########################################################
+include	$(BUILD_SYSTEM)build_object.mk
+
+#########################################################
+#	Make All Function 
+#########################################################
+all : clean libs exec
+#	$(call build-install-to-directory,$(LOCAL_SUB_DIR))
+#	$(call build-clean-obj)
+#	$(call build-lib-shared)
+
+libs :
+	$(call build-install-to-directory,$(LOCAL_SUB_DIR))
+
+exec :
+
+#########################################################
+#	Make Install Function 
+#########################################################
+install : 
+	$(MAKE) all 
+ifdef 	LOCAL_COPY_LIB	
+	$(call build-copy-src-to-dest,$(LOCAL_COPY_LIB),$(COPY_TO_LIB_PATH))
+endif
+	$(call build-copy-to-dir-header,$(LOCAL_PATH)include/player/ISDBTPlayer)
+
+#########################################################
+#	Make Clean Function 
+#########################################################	
+clean : 
+	$(call build-clean-to-directory,$(LOCAL_SUB_DIR))
+	$(call build-clean-obj)
+
+
+#########################################################
+#	Make Debug Function 
+#########################################################	
+debug : 
+	$(call build-debug-print)
+	@echo " LINUX_PLATFORM_BUILDDIR=$(LINUX_PLATFORM_BUILDDIR)"
+	@echo " LINUX_PLATFORM_DXBLIB_BUILD_TARGET_DIR=$(LINUX_PLATFORM_DXBLIB_BUILD_TARGET_DIR)"
+

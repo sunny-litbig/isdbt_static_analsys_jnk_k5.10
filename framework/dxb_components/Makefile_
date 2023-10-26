@@ -1,0 +1,76 @@
+#
+#	Telechips Linux OpenMax IL Component Library Make File 
+#
+
+#########################################################
+#	Telechips Make File Initialize
+#########################################################
+# PWD framework/dxb_components
+TOP := ../../linux/
+
+BUILD_SYSTEM	:= $(TOP)build/
+
+#########################################################
+#	Read Telechips Linux Configuration File 
+#########################################################
+include $(TOP)config
+
+#########################################################
+#	Read Telechips Linux make rules File 
+#########################################################
+#include ./tcc_omx.mk
+
+#########################################################
+#	Common Path Include   
+#########################################################
+include $(BUILD_SYSTEM)basic_path.mk
+
+#########################################################
+#	Read  define file  
+#########################################################
+include	$(BUILD_SYSTEM)definition.mk
+
+#########################################################
+#	Reset Variable  
+#########################################################
+include $(RESET_VARS)
+
+#########################################################
+#	Setting Sub Directory 
+#########################################################
+
+LOCAL_SUB_DIR :=
+	
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)tuners/omx_isdbttuner_tcc353x_component
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)tuners/omx_tuner_interface
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)decoders/dxb_cdk_library
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)decoders/omx_dxb_audiodec_interface
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)decoders/omx_dxb_audiodec_component
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)decoders/omx_dxb_videodec_interface
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)decoders/omx_dxb_videodec_component
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)renderers/omx_alsasink_component
+LOCAL_SUB_DIR += $(OPENMAX_COMPONENT)renderers/omx_fbdevsink_component
+
+
+#########################################################
+#	Make All Function 
+#########################################################
+all : 
+	$(call build-all-to-directory,$(LOCAL_SUB_DIR))
+
+#########################################################
+#	Make Install Function 
+#########################################################
+install : 
+	$(call build-install-to-directory,$(LOCAL_SUB_DIR))
+
+#########################################################
+#	Make Clean Function 
+#########################################################
+clean : 
+	$(call build-clean-to-directory,$(LOCAL_SUB_DIR))
+
+debug :
+	$(call build-debug-print)
+	@echo "SDK_ROOT = $(SDK_ROOT)"
+

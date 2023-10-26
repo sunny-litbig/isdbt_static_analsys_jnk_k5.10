@@ -1,0 +1,51 @@
+/*******************************************************************************
+
+*   Copyright (c) Telechips Inc.
+
+
+*   TCC Version 1.0
+
+This source code contains confidential information of Telechips.
+
+Any unauthorized use without a written permission of Telechips including not
+limited to re-distribution in source or binary form is strictly prohibited.
+
+This source code is provided "AS IS" and nothing contained in this source code
+shall constitute any express or implied warranty of any kind, including without
+limitation, any warranty of merchantability, fitness for a particular purpose
+or non-infringement of any patent, copyright or other third party intellectual
+property right.
+No warranty is made, express or implied, regarding the information's accuracy,
+completeness, or performance.
+
+In no event shall Telechips be liable for any claim, damages or other
+liability arising from, out of or in connection with this source code or
+the use in the source code.
+
+This source code is provided subject to the terms of a Mutual Non-Disclosure
+Agreement between Telechips and Company.
+*
+*******************************************************************************/
+#ifndef _TCC_FONTDRAW_H_
+#define _TCC_FONTDRAW_H_
+
+int tcc_fontDraw_init(void);
+int tcc_fontDraw_close(void);
+int tcc_fontDraw_setDestBuf(unsigned int *pBuf);
+int tcc_fontDraw_setDestRegion(unsigned int uiWidth, unsigned int uiHeight, unsigned int uiPitch);
+int tcc_fontDraw_setFontColor(unsigned int uiForeColor, unsigned int uiHalfForeColor, unsigned int uiBackColor, unsigned int uiHalfBackColor);
+int tcc_fontDraw_setFontLineEffectColor (unsigned int uiLineEffectColor);
+
+unsigned int* tcc_fontDraw_getDestBuf(void);
+int tcc_fontDraw_getDestRegion(unsigned int* puiWidth, unsigned int* puiHeight, unsigned int *puiPitch);
+int tcc_fontDraw_clearDestBuf(unsigned int uiColor);
+int tcc_fontDraw_clearFontBG(unsigned int uiX, unsigned int uiY, unsigned int uiWidth, unsigned int uiHeight);
+int tcc_fontDraw_drawHighlighting(unsigned int uiX, unsigned int uiY, unsigned int uiWidth, unsigned int uiHeight, unsigned int uiVspace, unsigned int Type);
+int tcc_fontDraw_drawUnderline(unsigned int uiX, unsigned int uiY, unsigned int uiWidth, unsigned int uiHeight, unsigned int uiVspace);
+int tcc_fontDraw_drawBitmapGrey256(unsigned int uiX, unsigned int uiY, unsigned int uiWidth, unsigned int uiHeight, unsigned int uiPitch, unsigned char* pBuf);
+int tcc_fontDraw_drawBitmapMono(unsigned int uiX, unsigned int uiY, unsigned int uiWidth, unsigned int uiHeight, unsigned int uiPitch, unsigned char* pBuf);
+int tcc_fontDraw_drawBitmapDRCS(TCCFONTDRCSMODE Mode, unsigned int uiX, unsigned int uiY, unsigned int uiWidth, unsigned int uiHeight, unsigned int uiPitch, unsigned char* pBuf);
+int tcc_fontDraw_scaleBitmapDRCS(unsigned long* srcBuf, int src_w, int src_h, unsigned long* dstBuf, int dst_x, int dst_y, int dst_w, int dst_h, int dst_p);
+void tcc_fontDraw_setDirection(unsigned int uiDirection);
+
+#endif //_TCC_FONTDRAW_H_

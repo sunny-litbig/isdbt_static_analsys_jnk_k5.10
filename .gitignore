@@ -1,0 +1,9 @@
+*.o
+linux/TCC_803X_Output/
+linux/application/isdbt/tcc_dxb_isdbt_app
+linux/build/include/
+linux/build/lib/
+framework/dxb_components/decoders/dxb_cdk_library/audio_codec/aacdec_latm/libTCC.DxB.latmdmx.so
+framework/dxb_components/decoders/omx_dxb_audiodec_interface/libOMX.TCC.DxB.audio.a
+middleware/lib_isdbt/lib/isdbt_subtitle/libisdbt_subtitle.a
+.vscode

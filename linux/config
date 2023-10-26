@@ -1,0 +1,134 @@
+####################################################################
+# Telechips Linux Application configuration file
+####################################################################
+
+
+####################################################################
+#
+# TARGET_BOARD
+#
+####################################################################
+# 1: 897x
+# 2: 898x
+# 3: 802x
+# 4: 803x
+CHOOSE_ENV = 4
+
+ifeq ($(CHOOSE_ENV),1)
+	TARGET_CHIPSET = TCC_897X
+	TARGET_BOARD = $(TARGET_CHIPSET)
+	TARGET_BOARD_PLATFORM = tcc897x
+else ifeq ($(CHOOSE_ENV),2)
+	TARGET_CHIPSET = TCC_898X
+	TARGET_BOARD = $(TARGET_CHIPSET)
+	TARGET_BOARD_PLATFORM = tcc898x
+else ifeq ($(CHOOSE_ENV),3)
+    TARGET_CHIPSET = TCC_802X
+    TARGET_BOARD = $(TARGET_CHIPSET)
+    TARGET_BOARD_PLATFORM = tcc802x
+else ifeq ($(CHOOSE_ENV),4)
+	TARGET_CHIPSET = TCC_803X
+	TARGET_BOARD = $(TARGET_CHIPSET)
+	TARGET_BOARD_PLATFORM = tcc803x
+endif
+
+#ifeq ($(LINUX_PLATFORM_PROJECT),tcc8930_evm-fld0800)
+	TCC_LCD_DISPLAY = Y
+#endif
+
+####################################################################
+
+
+####################################################################
+#
+# Library Options
+#
+#	TCC_STATIC_LIB
+#	TCC_SHARED_LIB
+#
+####################################################################
+TCC_STATIC_LIB = Y
+####################################################################
+
+ifeq ($(TCC_STATIC_LIB),Y)
+	TCC_SHARED_LIB = N
+else 
+	TCC_SHARED_LIB = Y
+endif 
+
+####################################################################
+
+
+####################################################################
+#
+# UI Application options
+#
+####################################################################
+TCC_GUI_APPLICATION = N
+####################################################################
+
+#ifeq ($(TCC_GUI_APPLICATION),Y)
+#TCC_QT_LAUNCHER = Y
+#ifeq ($(TCC_QT_LAUNCHER),N)
+#QT_DEMO_LAUNCHER = Y
+#endif
+
+#ifeq ($(TCC_QT_LAUNCHER),Y)
+#TCC_QT_SETTING = Y
+#endif
+
+#TCC_QT_BROWSER = Y
+
+#TCC_QT_DLNA = Y
+#TCC_QT_OPENGLES = N
+
+#endif
+
+
+
+####################################################################
+#
+# From Android environment
+#
+####################################################################
+
+SUPPORT_RINGBUFFER = N
+
+####################################################################
+#
+# DxB Broadcast Application options
+#
+####################################################################
+TCC_DXB_BROADCAST_TASK = Y
+####################################################################
+
+ifeq ($(TCC_DXB_BROADCAST_TASK),Y)
+     #-------------------------------#
+     #	      ISDBT FULL SEG
+     #-------------------------------#
+	DXB_BROADCAST_ISDBT_FULLSEG = Y
+	TRMP_ENABLE = N
+     #-------------------------------#
+     #	      DTV DUMP UTIL
+     #-------------------------------#
+	DXB_DUMP_UTIL = N
+endif
+
+STOP_IF_PLATFORM_ENV_NOT_SET = N
+####################################################################
+#
+# MEMORY_DEBUG_OPTION 
+#
+####################################################################
+#TCC_MEMORY_DEBUG_ENABLE = N
+####################################################################
+
+#ifeq ($(TCC_MEMORY_DEBUG_ENABLE),Y)
+	MEMORY_DEBUG = N
+#	DEBUG_TCC_MALLOC_HOOKING_ENABLE = Y
+#endif
+
+####################################################################
+
+
+####################################################################
