@@ -2776,7 +2776,7 @@ int CCPARS_Parse_CSI(T_SUB_CONTEXT *p_sub_ctx, int mngr, unsigned char ucCode, i
 					if(param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH){		char_path_len >>= 1;	}
 					if(param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT){		line_dir_len >>= 1;	}
 
-					/* managementÀÇ SDP°¡ ¼³Á¤µÈÈÄ statementÀÇ SDP°¡ ¿ÔÀ» °æ¿ì Ã³¸® */
+					/* managementï¿½ï¿½ SDPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ statementï¿½ï¿½ SDPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ */
 					if(param->usDispMode == CHAR_DISP_MASK_HWRITE){
 						param->act_pos_x = param->origin_pos_x;
 						param->act_pos_y = param->origin_pos_y + line_dir_len;

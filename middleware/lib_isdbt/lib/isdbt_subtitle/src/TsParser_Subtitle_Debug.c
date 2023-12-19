@@ -35,7 +35,8 @@ Agreement between Telechips and Company.
 
 #include <stdio.h>
 #include <stdarg.h>
-#include "TsParser_Subtitle_Debug.h"
+#include "../include/TsParser_Subtitle_Debug.h"
+// #include "TsParser_Subtitle_Debug.h"
 
 static unsigned int debug_level = DBG_ERR;
 

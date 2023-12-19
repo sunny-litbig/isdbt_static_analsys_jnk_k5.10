@@ -28,10 +28,12 @@ Agreement between Telechips and Company.
 *******************************************************************************/
 #define LOG_TAG	"TCC_THREAD"
 
-#include <pthread.h>
+// #include <pthread.h>
+#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/pthread.h"
 #include <stdlib.h>
-#include <utils/Log.h>
-#include "tcc_dxb_thread.h"
+// #include <utils/Log.h>
+#include "../../../../linux/system/include/utils/Log.h"
+#include "../include/tcc_dxb_thread.h"
 
 //#define	 NOPRIORITY_SUPPORT
 #define	 DBG_PRINTF		ALOGD	

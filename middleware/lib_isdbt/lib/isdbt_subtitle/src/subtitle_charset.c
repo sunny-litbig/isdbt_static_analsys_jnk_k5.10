@@ -34,7 +34,8 @@ Agreement between Telechips and Company.
 
 #include <stdio.h>
 #include <ISDBT_Caption.h>
-#include <TsParser_Subtitle.h>
+#include "../include/TsParser_Subtitle.h"
+// #include <TsParser_Subtitle.h>
 #include <TsParse_ISDBT_PngDec.h>
 #include <subtitle_main.h>
 #include <subtitle_display.h>

@@ -1,0 +1,56 @@
+{
+  "REANALYZE": false,
+  "STATIC_SERVER_ADDRESS": "192.168.10.171",
+  "STATIC_SERVER_PORT": 18010,
+  "TOOLCHAIN_FILENAME": "parser.sconf",
+  "PROJECT_KEY": "JKISDBTLINUXMW",
+  "WORKING_DIR": "/home1/jhong/project/isdbt_static_analsys_jnk_k5.10/linux/.staticdata",
+  "COMMAND": [],
+  "STATICFILE_DIR_PATH": "/home1/jhong/project/isdbt_static_analsys_jnk_k5.10/linux",
+  "PARSING": {
+    "C": {
+      "include": [],
+      "conf": [
+      ],
+      "removes": []
+    },
+    "CPP": {
+      "include": [],
+      "conf": [
+      ],
+      "removes": []
+    }
+  },
+  "COMPILER_INSTALLATION_PATH": [],
+  "USER_DEFINED_EXTENSIONS": {
+    "header": [],
+    "source": [],
+    "object": []
+  },
+  "ALIGN_PATH_MODE": "ALL",
+  "INCLUDE_GNU_PREINCLUDE": false,
+  "EXCLUSIONS": [],
+  "EXTRA_OPTIONS": {
+    "ASSIGN_TO_COMMITTER": {
+      "enable": false,
+      "path_replace_map": [
+        {
+          "from": "",
+          "to": ""
+        }
+      ]
+    },
+    "TOOLCHAIN_COMPILER_PREFIX": "",
+    "MODULE_WHITELIST_FOR_ANALYZE": [],
+    "USER_DEFINED_ENVIRONMENTS": {
+      "CSBUILD_ENVIRONMENT_EXAMPLE": "EXAMPLE"
+    },
+    "LANGUAGE_EXTENSION_PAIR": {
+      "C": [],
+      "CPP": []
+    },
+    "SPECIFIED_ANALYSIS_AGENT_VERSION": "",
+    "split_project_mode": false,
+    "ALIGN_PATH_MODE": "ALL"
+  }
+}

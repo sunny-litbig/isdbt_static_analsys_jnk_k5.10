@@ -26,8 +26,8 @@ This source code is provided subject to the terms of a Mutual Non-Disclosure
 Agreement between Telechips and Company.
 *
 *******************************************************************************/
-#ifndef _TS_PARSE_H_
-#define _TS_PARSE_H_
+#ifndef TS_PARSE_H_
+#define TS_PARSE_H_
 
 typedef unsigned int	BOOL;
 typedef unsigned char	U8;
@@ -86,7 +86,7 @@ typedef enum
 	SCAN_STATUS_MAX
 } SCAN_STATUS;
 
-#endif	// _TS_PARSE_H_
+#endif	// TS_PARSE_H_
 
 /* end of file */
 

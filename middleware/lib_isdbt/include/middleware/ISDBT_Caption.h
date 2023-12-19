@@ -186,17 +186,17 @@ Agreement between Telechips and Company.
 #define COLOR_SET_HALF					(0x20) // Half Foreground/Background Color
 
 /* Bit Mask of Character Display Effect */
-#define CHAR_DISP_MASK_HWRITE				(0x0001)
-#define CHAR_DISP_MASK_VWRITE				(0x0002)
+#define CHAR_DISP_MASK_HWRITE				(0x0001u)
+#define CHAR_DISP_MASK_VWRITE				(0x0002u)
 #define CHAR_DISP_MASK_UNDERLINE			(0x0004)
 #define CHAR_DISP_MASK_FLASHING			(0x0008)
 #define CHAR_DISP_MASK_HIGHLIGHT			(0x0010)
-#define CHAR_DISP_MASK_HALF_WIDTH		(0x0020)
-#define CHAR_DISP_MASK_HALF_HEIGHT		(0x0040)
-#define CHAR_DISP_MASK_DOUBLE_WIDTH		(0x0080)
-#define CHAR_DISP_MASK_DOUBLE_HEIGHT		(0x0100)
-#define CHAR_DISP_MASK_REPEAT				(0x0200)
-#define CHAR_DISP_MASK_NONSPACE			(0x0400)
+#define CHAR_DISP_MASK_HALF_WIDTH		(0x0020u)
+#define CHAR_DISP_MASK_HALF_HEIGHT		(0x0040u)
+#define CHAR_DISP_MASK_DOUBLE_WIDTH		(0x0080u)
+#define CHAR_DISP_MASK_DOUBLE_HEIGHT		(0x0100u)
+#define CHAR_DISP_MASK_REPEAT				(0x0200u)
+#define CHAR_DISP_MASK_NONSPACE			(0x0400u)
 
 
 /* FIFO Frame Flag Definition */

@@ -26,10 +26,14 @@ This source code is provided subject to the terms of a Mutual Non-Disclosure
 Agreement between Telechips and Company.
 *
 *******************************************************************************/
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdarg.h>
-#include <pthread.h>
-#include "LB_debug_log.h"
+// #include <pthread.h>
+#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/stdio.h"
+// #include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/c++/9.2.1/tr1/stdarg.h"
+#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/pthread.h"
+// #include "LB_debug_log.h"
+#include "../include/LB_debug_log.h"
 
 
 #define LB_MAX_LOG_MSG_SIZE 256

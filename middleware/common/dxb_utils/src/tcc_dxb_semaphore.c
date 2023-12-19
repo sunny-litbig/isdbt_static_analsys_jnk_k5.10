@@ -31,12 +31,13 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#include <pthread.h>
+// #include <pthread.h>
+#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/pthread.h"
 #include <sys/time.h>
 #include <errno.h>
 
-#include "tcc_dxb_semaphore.h"
-#include <tcc_pthread_cond.h>
+#include "../include/tcc_dxb_semaphore.h"
+#include "../../../../os/include/tcc_pthread_cond.h"
 
 /** Initializes the semaphore at a given value
  * 
@@ -84,7 +85,7 @@ int tcc_dxb_sem_down_timewait(tcc_dxb_sem_t* tsem,int expire_time)
     struct timespec ts = { 0, };
 
     clock_gettime(CLOCK_MONOTONIC , &ts);
-    ts.tv_sec += expire_time; 	// sec ´ÜÀ§·Î ÀÔ·Â..
+    ts.tv_sec += expire_time; 	// sec ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½..
 
 	pthread_mutex_lock(&tsem->mutex);
 	while (tsem->semval == 0) {

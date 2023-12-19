@@ -27,8 +27,8 @@ Agreement between Telechips and Company.
 *
 *******************************************************************************/
 extern void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int data);
-extern void CCPARS_Parse_Pos_CRLF(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int dir_check);
-extern void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
-extern void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
-extern void CCPARS_Parse_Pos_Up(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
-extern void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
+// extern void CCPARS_Parse_Pos_CRLF(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int dir_check);
+// extern void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
+// extern void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
+// extern void CCPARS_Parse_Pos_Up(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
+// extern void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);

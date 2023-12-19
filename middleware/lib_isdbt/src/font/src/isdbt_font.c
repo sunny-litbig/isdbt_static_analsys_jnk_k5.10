@@ -36,7 +36,7 @@ Agreement between Telechips and Company.
 /**** Please don't modify any macro, size and name of array ***** */
 
 #include "isdbt_font.h"
-
+int isdbt_font_VerticalTableSize(void);
 /*------- code table of character code set -------------*/
 const unsigned short s_KanjiSet[UNIPAGE_CODENUM] = 
 {
@@ -1436,7 +1436,8 @@ int isdbt_font_VerticalTableSize(void)
 {
 	int size=0;
 
-	if (sizeof(struct _VerRotTable_) != 0)
-		size = sizeof(stVerRotTable) / sizeof(struct _VerRotTable_);
+	if (sizeof(struct _VerRotTable_) != 0u){
+		size = (int) sizeof(stVerRotTable) / (int) sizeof(struct _VerRotTable_);
+	}
 	return size;
 }

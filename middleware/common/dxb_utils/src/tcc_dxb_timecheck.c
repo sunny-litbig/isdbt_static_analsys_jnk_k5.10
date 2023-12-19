@@ -27,8 +27,10 @@ Agreement between Telechips and Company.
 *
 *******************************************************************************/
 #define LOG_TAG	"tcc_dxb_timecheck"
-#include <utils/Log.h>
-#include <tcc_dxb_timecheck.h>
+// #include <utils/Log.h>
+#include "../../../../linux/system/include/utils/Log.h"
+// #include <tcc_dxb_timecheck.h>
+#include "../include/tcc_dxb_timecheck.h"
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>

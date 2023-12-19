@@ -28,36 +28,37 @@ Agreement between Telechips and Company.
 *******************************************************************************/
 #include <TsParse.h>
 #include <ISDBT_Caption.h>
-#include <TsParser_Subtitle.h>
 #include "TsParser_Subtitle_Pos.h"
+// #include "../include/TsParser_Subtitle_Pos.h"
+#include "../include/TsParser_Subtitle.h"
+// #include <TsParser_Subtitle.h>
 #include "TsParser_Subtitle_Debug.h"
 
-
-void CCPARS_Parse_Default_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr)
+static void CCPARS_Parse_Default_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr)
 {
 	T_CHAR_DISP_INFO *param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
-
+int temp = mngr;
 	LIB_DBG(DBG_C0, "[%s] disp_format(%d)\n", __func__, param->disp_format);
-
+	
 	if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 		;
 	}else{
 		param->def_font_w = 36;
 		param->def_font_h = 36;
 		
-		if(param->disp_format == SUB_DISP_H_960X540){
+		if(param->disp_format == (int) SUB_DISP_H_960X540){
 			param->usDispMode = CHAR_DISP_MASK_HWRITE;
 			param->def_hs = 4;
 			param->def_vs = 24;
-		}else if(param->disp_format == SUB_DISP_V_960X540){
+		}else if(param->disp_format == (int) SUB_DISP_V_960X540){
 			param->usDispMode = CHAR_DISP_MASK_VWRITE;	
 			param->def_hs = 12;
 			param->def_vs = 24;
-		}else if(param->disp_format == SUB_DISP_H_720X480){
+		}else if(param->disp_format == (int) SUB_DISP_H_720X480){
 			param->usDispMode = CHAR_DISP_MASK_HWRITE;	
 			param->def_hs = 4;
 			param->def_vs = 16;
-		}else if(param->disp_format == SUB_DISP_V_720X480){
+		}else if(param->disp_format == (int) SUB_DISP_V_720X480){
 			param->usDispMode = CHAR_DISP_MASK_VWRITE;	
 			param->def_hs = 8;
 			param->def_vs = 24;
@@ -132,32 +133,32 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 
 		CCPARS_Parse_Default_Init(p_sub_ctx, mngr);
 
-		param->act_font_w = (param->mngr_font_w != 0)?param->mngr_font_w:param->def_font_w;
-		param->act_font_h = (param->mngr_font_h != 0)?param->mngr_font_h:param->def_font_h;
+		param->act_font_w = (param->mngr_font_w != 0u)?param->mngr_font_w:param->def_font_w;
+		param->act_font_h = (param->mngr_font_h != 0u)?param->mngr_font_h:param->def_font_h;
 		
 		if(param->mngr_hs != -1){
-			param->act_hs = param->mngr_hs;
+			param->act_hs = (unsigned) param->mngr_hs;
 		}else{
-			param->act_hs = param->def_hs;
+			param->act_hs = (unsigned) param->def_hs;
 		}
 
 		if(param->mngr_vs != -1){
-			param->act_vs = param->mngr_vs;
+			param->act_vs = (unsigned) param->mngr_vs;
 		}else{
 			param->act_vs = param->def_vs;
 		}
 
-		if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-			char_path_len = param->act_font_w + param->act_hs;
-			line_dir_len = (param->act_font_h + param->act_vs);
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE) != 0u){
+			char_path_len = (int) param->act_font_w + (int) param->act_hs;
+			line_dir_len = (int) param->act_font_h + (int) param->act_vs;
 		}else{
-			char_path_len = param->act_font_w + param->act_vs;
-			line_dir_len = (param->act_font_h + param->act_hs);
+			char_path_len = (int) param->act_font_w + (int) param->act_vs;
+			line_dir_len = (int) param->act_font_h + (int) param->act_hs;
 		}
 			
-		if(param->usDispMode & CHAR_DISP_MASK_VWRITE)
+		if((param->usDispMode & CHAR_DISP_MASK_VWRITE) != 0u)
 		{	
-			if((param->mngr_disp_w != 0) || (param->mngr_disp_h != 0)){
+			if((param->mngr_disp_w != 0u) || (param->mngr_disp_h != 0u)){
 				param->act_disp_w = param->mngr_disp_w;
 				param->act_disp_h = param->mngr_disp_h;
 			}else{
@@ -165,19 +166,19 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 				param->act_disp_h = param->sub_plane_h;
 			}
 			
-			if((param->mngr_pos_x != 0) || (param->mngr_pos_y != 0)){
+			if((param->mngr_pos_x != 0u) || (param->mngr_pos_y != 0u)){
 				param->origin_pos_x = param->mngr_pos_x;
 				param->origin_pos_y = param->mngr_pos_y;
 			}else{
 				param->origin_pos_x = 0;
 				param->origin_pos_y = 0;
 			}
-
-			param->act_pos_x = param->origin_pos_x + param->act_disp_w - (char_path_len>>1);
-			param->act_pos_y = param->origin_pos_y;
+			unsigned int uchar_path_len = (unsigned) char_path_len >> 1;
+			param->act_pos_x = (int) param->origin_pos_x + (int) param->act_disp_w - ((int)uchar_path_len);
+			param->act_pos_y = (int) param->origin_pos_y;
 			LIB_DBG(DBG_C0, "[%s:%d] ACT[%d,%d]\n", __func__, __LINE__, param->act_pos_x, param->act_pos_y);
 		}else{
-			if((param->mngr_disp_w != 0) || (param->mngr_disp_h != 0)){
+			if((param->mngr_disp_w != 0u) || (param->mngr_disp_h != 0u)){
 				param->act_disp_w = param->mngr_disp_w;
 				param->act_disp_h = param->mngr_disp_h;
 			}else{
@@ -185,7 +186,7 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 				param->act_disp_h = param->sub_plane_h;
 			}
 			
-			if((param->mngr_pos_x != 0) || (param->mngr_pos_y != 0)){
+			if((param->mngr_pos_x != 0u) || (param->mngr_pos_y != 0u)){
 				param->origin_pos_x = param->mngr_pos_x;
 				param->origin_pos_y = param->mngr_pos_y;
 			}else{
@@ -200,8 +201,8 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 				param->act_disp_w = 704;
 				param->act_disp_h = 132;
 			}else{
-				param->act_pos_x = param->origin_pos_x;
-				param->act_pos_y = param->origin_pos_y + line_dir_len;
+				param->act_pos_x = (int) param->origin_pos_x;
+				param->act_pos_y = (int) (param->origin_pos_y) + line_dir_len;
 			}
 #else
 			param->act_pos_x = param->origin_pos_x;
@@ -222,7 +223,7 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 		if(data == 7){
 			/* 7 : horizontal writing form in 960x540 */
 			param->usDispMode |= CHAR_DISP_MASK_HWRITE;
-			if(mngr){
+			if(mngr > 0){
 				param->mngr_disp_w = 960;
 				param->mngr_disp_h = 540;
 			}else{
@@ -234,7 +235,7 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 		}else if(data == 8){
 			/* 8 : vertical writing form in 960x540 */
 			param->usDispMode |= CHAR_DISP_MASK_VWRITE;
-			if(mngr){
+			if(mngr > 0){
 				param->mngr_disp_w = 960;
 				param->mngr_disp_h = 540;
 			}else{
@@ -246,7 +247,7 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 		}else if(data == 9){
 			/* 9 : horizontal writing form in 720x480 */
 			param->usDispMode |= CHAR_DISP_MASK_HWRITE;
-			if(mngr){
+			if(mngr > 0){
 				param->mngr_disp_w = 720;
 				param->mngr_disp_h = 480;
 			}else{
@@ -258,7 +259,7 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 		}else if(data == 10){
 			/* 10 : vertical writing form in 720x480 */
 			param->usDispMode |= CHAR_DISP_MASK_VWRITE;
-			if(mngr){
+			if(mngr > 0){
 				param->mngr_disp_w = 720;
 				param->mngr_disp_h = 480;
 			}else{
@@ -267,33 +268,34 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 			}
 			param->def_hs = 8;
 			param->def_vs = 24;
+		}else{//MISRA_C
 		}
 
-		param->act_font_w = (param->mngr_font_w != 0)?param->mngr_font_w:param->def_font_w;
-		param->act_font_h = (param->mngr_font_h != 0)?param->mngr_font_h:param->def_font_h;
+		param->act_font_w = (param->mngr_font_w != 0u)?param->mngr_font_w:param->def_font_w;
+		param->act_font_h = (param->mngr_font_h != 0u)?param->mngr_font_h:param->def_font_h;
 
 		if(param->mngr_hs != -1){
-			param->act_hs = param->mngr_hs;
+			param->act_hs = (unsigned) param->mngr_hs;
 		}else{
 			param->act_hs = param->def_hs;
 		}
 
 		if(param->mngr_vs != -1){
-			param->act_vs = param->mngr_vs;
+			param->act_vs = (unsigned)param->mngr_vs;
 		}else{
 			param->act_vs = param->def_vs;
 		}
 
-		if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-			char_path_len = param->act_font_w + param->act_hs;
-			line_dir_len = (param->act_font_h + param->act_vs);
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE) != 0u){
+			char_path_len = (int) param->act_font_w + (int) param->act_hs;
+			line_dir_len = ((int) param->act_font_h + (int) param->act_vs);
 		}else{
-			char_path_len = param->act_font_w + param->act_vs;
-			line_dir_len = (param->act_font_h + param->act_hs);
+			char_path_len = (int) param->act_font_w + (int) param->act_vs;
+			line_dir_len = ((int) param->act_font_h + (int) param->act_hs);
 		}
 
-		if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
-			if((param->mngr_disp_w != 0) || (param->mngr_disp_h != 0)){
+		if((param->usDispMode & CHAR_DISP_MASK_VWRITE) != 0u){
+			if((param->mngr_disp_w != 0u) || (param->mngr_disp_h != 0u)){
 				param->act_disp_w = param->mngr_disp_w;
 				param->act_disp_h = param->mngr_disp_h;
 			}else{
@@ -301,20 +303,20 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 				param->act_disp_h = param->swf_disp_h;
 			}
 			
-			if((param->mngr_pos_x != 0) || (param->mngr_pos_y != 0)){
+			if((param->mngr_pos_x != 0u) || (param->mngr_pos_y != 0u)){
 				param->origin_pos_x = param->mngr_pos_x;
 				param->origin_pos_y = param->mngr_pos_y;
 			}else{
 				param->origin_pos_x = 0;
 				param->origin_pos_y = 0;				
 			}
-
-			param->act_pos_x = param->origin_pos_x + param->act_disp_w - (char_path_len>>1);
-			param->act_pos_y = param->origin_pos_y;
+			unsigned int uchar_path_len = (unsigned) char_path_len >> 1;
+			param->act_pos_x = ((int) param->origin_pos_x + (int) param->act_disp_w) - ((int)uchar_path_len);
+			param->act_pos_y = (int) param->origin_pos_y;
 			LIB_DBG(DBG_C0, "[%s:%d] ACT[%d,%d], font[%d:%d-%d:%d]\n", __func__, __LINE__, \
 				param->act_pos_x, param->act_pos_y, param->act_font_w, param->act_font_h, param->act_hs, param->act_vs);
 		}else{
-			if((param->mngr_disp_w != 0) || (param->mngr_disp_h != 0)){
+			if((param->mngr_disp_w != 0u) || (param->mngr_disp_h != 0u)){
 				param->act_disp_w = param->mngr_disp_w;
 				param->act_disp_h = param->mngr_disp_h;
 			}else{
@@ -322,7 +324,7 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 				param->act_disp_h = param->swf_disp_h;
 			}
 			
-			if((param->mngr_pos_x != 0) || (param->mngr_pos_y != 0)){
+			if((param->mngr_pos_x != 0u) || (param->mngr_pos_y != 0u)){
 				param->origin_pos_x = param->mngr_pos_x;
 				param->origin_pos_y = param->mngr_pos_y;
 			}else{
@@ -330,8 +332,8 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 				param->origin_pos_y = 0;
 			}
 			
-			param->act_pos_x = param->origin_pos_x;
-			param->act_pos_y = param->origin_pos_y + line_dir_len;
+			param->act_pos_x = (int) param->origin_pos_x;
+			param->act_pos_y = (int) param->origin_pos_y + line_dir_len;
 			LIB_DBG(DBG_C0, "[%s:%d] ACT[%d,%d], font[%d:%d-%d:%d]\n", __func__, __LINE__, \
 				param->act_pos_x, param->act_pos_y, param->act_font_w, param->act_font_h, param->act_hs, param->act_vs);
 		}		
@@ -352,35 +354,41 @@ void CCPARS_Parse_Pos_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int da
 		param->uiCharDispCount = 0;
 		
 		CCPARS_Init_GSet(param->data_type, param->dtv_type);
+	}else{
+		//MISRA C 2012
 	}
 		
 	LIB_DBG(DBG_C0, "[%s] act_pos[%d,%d] font[%dx%d - %d:%d]\n", __func__, 
 		param->act_pos_x, param->act_pos_y, param->act_font_w, param->act_font_h, param->act_hs, param->act_vs);
 }
 
-void CCPARS_Parse_Pos_CRLF(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int dir_check)
+void CCPARS_Parse_Pos_CRLF(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init)
 {
 	T_CHAR_DISP_INFO *param = NULL;
 	int char_path_len=0, line_dir_len=0;
 	int font_ratio_w = 1, font_ratio_h =1;
 	int vs_ratio = 1;
 	int do_crlf = 1;
-	
+	int dir_check = need_init;
+	unsigned int uchar_path_len = 0; 
+	unsigned int uline_dir_len = 0;
+	int temp = mngr;
+
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH){	font_ratio_w = 2;	}
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT){	font_ratio_h = vs_ratio = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH) != 0u){	font_ratio_w = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT) != 0u){	font_ratio_h = 2; vs_ratio = 2;	}
 	
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_hs);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_vs * vs_ratio);
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE) !=0u){
+		char_path_len = (((int) param->act_font_w * font_ratio_w) + (int) param->act_hs);
+		line_dir_len = (((int) param->act_font_h * font_ratio_h) + ((int) param->act_vs * vs_ratio));
 	}else{
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_vs * vs_ratio);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_hs);
+		char_path_len = (((int) param->act_font_w * font_ratio_w) + ((int) param->act_vs * vs_ratio));
+		line_dir_len = (((int) param->act_font_h * font_ratio_h) + (int) param->act_hs);
 	}
-	
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH){		char_path_len >>= 1;	}
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT){		line_dir_len >>= 1;	}
+
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH) != 0u){		uchar_path_len = (unsigned) char_path_len >> 1; char_path_len = (int) uchar_path_len;	}
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT) != 0u){		uline_dir_len	= (unsigned)line_dir_len >> 1; line_dir_len = (int)uline_dir_len;	}
 	
 	LIB_DBG(DBG_C0, "[CRLF] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d, chk:%d\n",  
 			param->act_font_w, param->act_font_h,
@@ -390,33 +398,35 @@ void CCPARS_Parse_Pos_CRLF(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int di
 			param->act_disp_w, param->act_disp_h,
 			param->usDispMode, count, param->uiLineNum, dir_check);
 
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-		if(dir_check){
-			do_crlf = ((unsigned int)(param->act_pos_x + char_path_len) > (param->origin_pos_x + param->act_disp_w))?1:0;
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE) != 0u){
+		if((dir_check) != 0){
+			do_crlf = ((param->act_pos_x + char_path_len) > ((int)param->origin_pos_x + (int)param->act_disp_w))?1:0;
 		}
 
-		if(do_crlf){
-			if((unsigned int)(param->act_pos_y + line_dir_len) > (param->origin_pos_y + param->act_disp_h)){
-				param->act_pos_y = param->origin_pos_y + line_dir_len;
+		if(do_crlf != 0){
+			if(((unsigned int)param->act_pos_y + (unsigned int)line_dir_len) > (param->origin_pos_y + param->act_disp_h)){
+				param->act_pos_y = (int) param->origin_pos_y + line_dir_len;
 			}else{
 				param->act_pos_y += line_dir_len;
 			}
 			param->uiLineNum++;
-			param->act_pos_x = param->origin_pos_x;
+			param->act_pos_x = (int)param->origin_pos_x;
 		}
-	}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
-		if(dir_check){
-			do_crlf = ((unsigned int)(param->act_pos_y + line_dir_len) > (param->origin_pos_y + param->act_disp_h))?1:0;
+	}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE) != 0u){
+		if((dir_check) != 0){
+			do_crlf = (((unsigned int)param->act_pos_y + (unsigned int)line_dir_len) > (param->origin_pos_y + param->act_disp_h))?1:0;
 		}
 
-		if(do_crlf){
+		if(do_crlf != 0){
 			param->act_pos_x -= char_path_len;
 			if(param->act_pos_x < 0){
-				param->act_pos_x = param->act_disp_w - char_path_len;
+				param->act_pos_x = (int)param->act_disp_w - char_path_len;
 			}
-			param->act_pos_y = param->origin_pos_y;
+			param->act_pos_y = (int)param->origin_pos_y;
 			param->uiLineNum++;
 		}
+	}else{
+		//MISRA C 2012
 	}
 	LIB_DBG(DBG_C0, "[CRLF] - ACT[%d:%d], line:%d\n", \
 		param->act_pos_x, param->act_pos_y, param->uiLineNum);
@@ -429,6 +439,9 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 	int pos_x=0, pos_y=0, char_path_limit_check = 0, line_dir_limit_check = 0;
 	int vs_ratio = 1;
 	int iCount = 0;
+	unsigned int uchar_path_len = 0; 
+	unsigned int uline_dir_len = 0;
+	int temp = mngr;
 
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 	LIB_DBG(DBG_C0, "[FORWARD] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d\n",  
@@ -439,28 +452,28 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 			param->act_disp_w, param->act_disp_h,
 			param->usDispMode, count, param->uiLineNum);
 
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH){	font_ratio_w = 2;	}
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT){	font_ratio_h = vs_ratio = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH) !=0u){	font_ratio_w = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT) !=0u){	font_ratio_h =2; vs_ratio = 2;	}
 	
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_hs);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_vs * vs_ratio);
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE) != 0u){
+		char_path_len = ((((int)param->act_font_w) * font_ratio_w) + ((int)param->act_hs));
+		line_dir_len = (((int)param->act_font_h * font_ratio_h) + ((int)param->act_vs * vs_ratio));
 	}else{
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_vs * vs_ratio);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_hs);
+		char_path_len = (((int)param->act_font_w * font_ratio_w) + ((int)param->act_vs * vs_ratio));
+		line_dir_len = (((int)param->act_font_h * font_ratio_h) + (int)param->act_hs);
 	}
-	
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH){		char_path_len >>= 1;	}
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT){		line_dir_len >>= 1;	}
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH) !=0u){		uchar_path_len = (unsigned) char_path_len >> 1; char_path_len = (int)uchar_path_len;	}
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT) !=0u){		uline_dir_len	= (unsigned)line_dir_len >> 1; line_dir_len = (int)uline_dir_len;	}
 
-	if (need_init)
+	if (need_init !=0)
 	{
-		if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
 			/* Initialize the x position. */
-			param->act_pos_x = param->origin_pos_x;
+			param->act_pos_x = (int)param->origin_pos_x;
 			param->uiCharNumInLine = 0;
-		}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
-			param->act_pos_x = param->origin_pos_x + param->act_disp_w - (char_path_len>>1);
+		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
+			uchar_path_len = (unsigned) char_path_len >> 1;
+			param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
 			param->uiCharNumInLine = 0;
 		}else{
 			LIB_DBG(DBG_ERR, "[FORWARD] Invalid direction writing\n");
@@ -472,9 +485,9 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 	iCount = (int)count;	
 
 	if(iCount > 0){
-		if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-			if(param->usDispMode & CHAR_DISP_MASK_REPEAT){
-				param->uiRepeatCharCount = ((param->origin_pos_x + param->act_disp_w - param->act_pos_x)/char_path_len);
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+			if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
+				param->uiRepeatCharCount = ((param->origin_pos_x + param->act_disp_w - (unsigned)param->act_pos_x)/(unsigned)char_path_len);
 				param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
 			}
 			
@@ -485,18 +498,18 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 
 				if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 					/* APF is not used in 1Seg */
-					char_path_limit_check = ((unsigned int)pos_x > param->origin_pos_x + param->act_disp_w)?1:0;
+					char_path_limit_check = ((unsigned int)pos_x > (param->origin_pos_x + param->act_disp_w))?1:0;
 				}
 				else{
-					char_path_limit_check = ((unsigned int)pos_x >= param->origin_pos_x + param->act_disp_w)?1:0;
+					char_path_limit_check = ((unsigned int)pos_x >= (param->origin_pos_x + param->act_disp_w))?1:0;
 				}
 
-				if(char_path_limit_check){
-					param->act_pos_x = param->origin_pos_x;
+				if(char_path_limit_check!=0){
+					param->act_pos_x = (int)param->origin_pos_x;
 					pos_y = param->act_pos_y + line_dir_len;
 
-					if((unsigned int)pos_y > param->origin_pos_y + param->act_disp_h){
-						param->act_pos_y = param->origin_pos_y + line_dir_len;
+					if((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h)){
+						param->act_pos_y = (int)param->origin_pos_y + line_dir_len;
 					}else{
 						param->act_pos_y += line_dir_len;
 					}
@@ -506,14 +519,14 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 				}
 				iCount--;
 			} while (iCount > 0);
-		}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
+		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
 			if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 				LIB_DBG(DBG_ERR, "[FORWARD] - Vertical writing not supported for 1seg.\n");
 				return;
 			}
 			
-			if(param->usDispMode & CHAR_DISP_MASK_REPEAT){
-				param->uiRepeatCharCount = ((param->origin_pos_y + param->act_disp_h - param->act_pos_y)/line_dir_len);
+			if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
+				param->uiRepeatCharCount = ((param->origin_pos_y + param->act_disp_h - (unsigned)param->act_pos_y)/(unsigned)line_dir_len);
 				param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
 			}
 
@@ -523,18 +536,19 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 
 				if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 					/* APF is not used in 1Seg */
-				line_dir_limit_check = ((unsigned int)pos_y > param->origin_pos_y + param->act_disp_h)?1:0;
+				line_dir_limit_check = ((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h))?1:0;
 				}
 				else{
-					line_dir_limit_check = ((unsigned int)pos_y >= param->origin_pos_y + param->act_disp_h)?1:0;
+					line_dir_limit_check = ((unsigned int)pos_y >= (param->origin_pos_y + param->act_disp_h))?1:0;
 				}
 
-				if(line_dir_limit_check){
-					param->act_pos_y = param->origin_pos_y;
+				if(line_dir_limit_check !=0){
+					param->act_pos_y = (int)param->origin_pos_y;
 					pos_x = param->act_pos_x - char_path_len;
 
 					if(pos_x <= (int)param->origin_pos_x){
-						param->act_pos_x = param->origin_pos_x + param->act_disp_w - (char_path_len>>1);
+						uchar_path_len = (unsigned) char_path_len >> 1;
+						param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
 					}else{
 						param->act_pos_x -= char_path_len;
 					}
@@ -544,6 +558,8 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 				}
 				iCount--;
 			} while (iCount > 0);
+		}else{
+			//MISRA C 2012
 		}
 	}	
 	LIB_DBG(DBG_C0, "[FORWARD] - ACT[%d:%d], line:%d\n", \
@@ -558,7 +574,9 @@ void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, in
 	int char_path_limit_check = 0, line_dir_limit_check = 0;
 	int vs_ratio = 1;
 	int iCount = 0;
-
+	unsigned int uchar_path_len = 0;
+	unsigned int uline_dir_len	= 0;
+	int temp = mngr;
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 
 	LIB_DBG(DBG_C0, "[BACKWARD] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d, need_init:%d\n",  
@@ -569,27 +587,28 @@ void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, in
 			param->act_disp_w, param->act_disp_h,
 			param->usDispMode, count, param->uiLineNum, need_init);
 	
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH){	font_ratio_w = 2;	}
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT){	font_ratio_h = vs_ratio = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH)!=0u){	font_ratio_w = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT)!=0u){	font_ratio_h =2; vs_ratio = 2;	}
 	
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_hs);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_vs * vs_ratio);
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+		char_path_len = (((int)param->act_font_w * font_ratio_w) + (int)param->act_hs);
+		line_dir_len = (((int)param->act_font_h * font_ratio_h) + ((int)param->act_vs * vs_ratio));
 	}else{
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_vs * vs_ratio);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_hs);
+		char_path_len = (((int)param->act_font_w * font_ratio_w) + ((int)param->act_vs * vs_ratio));
+		line_dir_len = (((int)param->act_font_h * font_ratio_h) + (int)param->act_hs);
 	}
 	
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH){		char_path_len >>= 1;	}
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT){		line_dir_len >>= 1;	}
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH)!=0u){		uchar_path_len = (unsigned) char_path_len >> 1; char_path_len = (int)uchar_path_len;	}
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT)!=0u){		uline_dir_len	= (unsigned) line_dir_len >> 1; line_dir_len = (int)uline_dir_len;	}
 	
-	if (need_init == (unsigned int)E_SET_START_POS_INIT)
+	if (need_init == (int)E_SET_START_POS_INIT)
 	{
-		if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-			param->act_pos_x = param->origin_pos_x;
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+			param->act_pos_x = (int)param->origin_pos_x;
 			param->uiCharNumInLine = 0;
-		}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
-			param->act_pos_x = param->origin_pos_x + param->act_disp_w - (char_path_len>>1);
+		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
+			uchar_path_len = (unsigned) char_path_len >> 1;
+			param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
 			param->uiCharNumInLine = 0;
 		}else{
 			LIB_DBG(DBG_ERR, "[FORWARD] Invalid direction writing\n");
@@ -599,17 +618,17 @@ void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, in
 
 	iCount = (int)count;
 
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
 		/* Set the active position to forward one. - param1 is font width */
 		do
 		{
 			pos_x = param->act_pos_x - char_path_len;
 
 			if(pos_x < 0){
-				param->act_pos_x = param->origin_pos_x + param->act_disp_w - char_path_len;
+				param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - char_path_len;
 				pos_y = param->act_pos_y - line_dir_len;
 				if(pos_y <= 0){
-					param->act_pos_y = (param->origin_pos_y + param->act_disp_h);
+					param->act_pos_y = ((int)param->origin_pos_y + (int)param->act_disp_h);
 				}else{
 					param->act_pos_y -= line_dir_len;
 				}
@@ -619,14 +638,14 @@ void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, in
 			}
 			iCount--;
 		} while (iCount > 0);
-	}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
+	}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
 		if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 			LIB_DBG(DBG_ERR, "[BACKWARD] - Vertical writing not supported for 1seg.\n");
 			return;
 		}
 		
-		if(param->usDispMode & CHAR_DISP_MASK_REPEAT){
-			param->uiRepeatCharCount = ((param->origin_pos_y - param->act_pos_y)/line_dir_len);
+		if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
+			param->uiRepeatCharCount = ((param->origin_pos_y - (unsigned)param->act_pos_y)/(unsigned)line_dir_len);
 			param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
 		}
 
@@ -635,22 +654,25 @@ void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, in
 			pos_y = param->act_pos_y - line_dir_len;
 			line_dir_limit_check = (pos_y < (int)param->origin_pos_y)?1:0;
 
-			if(line_dir_limit_check){
+			if(line_dir_limit_check!=0){
 				pos_x = param->act_pos_x + char_path_len;				
 
-				if(pos_x >= (int)(param->origin_pos_x + param->act_disp_w)){
-					param->act_pos_x = param->origin_pos_x + (char_path_len>>1);
+				if(pos_x >= ((int)param->origin_pos_x + (int)param->act_disp_w)){
+					uchar_path_len = (unsigned) char_path_len >> 1;
+					param->act_pos_x = (int)param->origin_pos_x + ((int)uchar_path_len);
 				}else{
 					param->act_pos_x += char_path_len;
 				}
-				param->act_pos_y = param->origin_pos_y + param->act_disp_h - line_dir_len;				
+				param->act_pos_y = (int)param->origin_pos_y + (int)param->act_disp_h - line_dir_len;				
 				param->uiLineNum--;
 			}else{
 				param->act_pos_y -= line_dir_len;
 			}
 			iCount--;
 		} while (iCount > 0);
-	}	
+	}else{
+		//MISRA C 2012
+	}
 	
 	LIB_DBG(DBG_C0, "[BACKWARD] - ACT[%d:%d], line:%d", param->act_pos_x, param->act_pos_y, param->uiLineNum);
 }
@@ -662,7 +684,9 @@ void CCPARS_Parse_Pos_Up(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need
 	int pos_x = 0, pos_y = 0;
 	int vs_ratio = 1;
 	int iCount = 0;
-
+	unsigned int uchar_path_len = 0;
+	unsigned int uline_dir_len	= 0;
+	int temp = mngr;
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 	
 	LIB_DBG(DBG_C0, "[UP] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d, need_init:%d\n",  
@@ -675,32 +699,32 @@ void CCPARS_Parse_Pos_Up(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need
 
 	iCount = (int)count;
 
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH){	font_ratio_w = 2;	}
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT){	font_ratio_h = vs_ratio = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH)!=0u){	font_ratio_w = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT)!=0u){	font_ratio_h = 2; vs_ratio = 2;	}
 	
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_hs);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_vs * vs_ratio);
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+		char_path_len = (((int)param->act_font_w * font_ratio_w) + (int)param->act_hs);
+		line_dir_len = (((int)param->act_font_h * font_ratio_h) + ((int)param->act_vs * vs_ratio));
 	}else{
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_vs * vs_ratio);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_hs);
+		char_path_len = (((int)param->act_font_w * font_ratio_w) + ((int)param->act_vs * vs_ratio));
+		line_dir_len = (((int)param->act_font_h * font_ratio_h) + (int)param->act_hs);
 	}
-	
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH){		char_path_len >>= 1;	}
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT){		line_dir_len >>= 1;	}
 
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH)!=0u){		uchar_path_len = (unsigned) char_path_len >> 1; char_path_len = (int)uchar_path_len;	}
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT)!=0u){		uline_dir_len	= (unsigned)line_dir_len >> 1; line_dir_len = (int)uline_dir_len;	}
+
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
 		do{
 			pos_y = param->act_pos_y - line_dir_len;
 			if(pos_y <= 0){
-				param->act_pos_y = (param->origin_pos_y + param->act_disp_h);
+				param->act_pos_y = ((int)param->origin_pos_y + (int)param->act_disp_h);
 			}else{
 				param->act_pos_y -= line_dir_len;
 			}
 			param->uiLineNum--;
 			iCount--;
 		}while(iCount > 0);
-	}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
+	}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
 		if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 			LIB_DBG(DBG_ERR, "[UP] - Vertical writing not supported for 1seg.\n");
 			return;
@@ -708,14 +732,17 @@ void CCPARS_Parse_Pos_Up(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need
 
 		do{
 			pos_x = param->act_pos_x + char_path_len;
-			if(pos_x >= (int)(param->origin_pos_x + param->act_disp_w)){
-				param->act_pos_x = param->origin_pos_x + (char_path_len>>1);
+			if(pos_x >= ((int)param->origin_pos_x + (int)param->act_disp_w)){
+				uchar_path_len = (unsigned) char_path_len >> 1;
+				param->act_pos_x = (int)param->origin_pos_x + ((int)uchar_path_len);
 			}else{
 				param->act_pos_x += char_path_len;
 			}
 			param->uiLineNum--;
 			iCount--;
 		}while(iCount > 0);
+	}else{
+		//MISRA C 2012
 	}
 	
 	LIB_DBG(DBG_C0, "[UP] - ACT[%d:%d], line:%d", param->act_pos_x, param->act_pos_y, param->uiLineNum);
@@ -728,7 +755,9 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 	int pos_x = 0, pos_y = 0;
 	int vs_ratio = 1;
 	int iCount = 0;
-
+	unsigned int uchar_path_len = 0; 
+	unsigned int uline_dir_len	= 0;
+	int temp = mngr;
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 
 	LIB_DBG(DBG_C0, "[DOWN] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d, need_init:%d\n",  
@@ -739,27 +768,28 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 			param->act_disp_w, param->act_disp_h,
 			param->usDispMode, count, param->uiLineNum, need_init);
 
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH){	font_ratio_w = 2;	}
-	if(param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT){	font_ratio_h = vs_ratio = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_WIDTH)!=0u){	font_ratio_w = 2;	}
+	if((param->usDispMode & CHAR_DISP_MASK_DOUBLE_HEIGHT)!=0u){	font_ratio_h =2; vs_ratio = 2;	}
 	
-	if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_hs);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_vs * vs_ratio);
+	if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+		char_path_len = (((int)param->act_font_w * font_ratio_w) + (int)param->act_hs);
+		line_dir_len = (((int)param->act_font_h * font_ratio_h )+ ((int)param->act_vs * vs_ratio));
 	}else{
-		char_path_len = (param->act_font_w * font_ratio_w + param->act_vs * vs_ratio);
-		line_dir_len = (param->act_font_h * font_ratio_h + param->act_hs);
+		char_path_len = (((int)param->act_font_w * font_ratio_w) + ((int)param->act_vs * vs_ratio));
+		line_dir_len = (((int)param->act_font_h * font_ratio_h) + (int)param->act_hs);
 	}
+
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH)!=0u){	uchar_path_len = (unsigned) char_path_len >> 1;	char_path_len = (int)uchar_path_len;	}
+	if((param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT)!=0u){	uline_dir_len	= (unsigned)line_dir_len >> 1; line_dir_len = (int)uline_dir_len;	}
 	
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_WIDTH){		char_path_len >>= 1;	}
-	if(param->usDispMode & CHAR_DISP_MASK_HALF_HEIGHT){		line_dir_len >>= 1;	}
-	
-	if(need_init == E_SET_START_POS_INIT){
-		if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
-			param->act_pos_x = param->origin_pos_x;
-			param->act_pos_y = param->origin_pos_y + line_dir_len;
-		}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
-			param->act_pos_x = param->origin_pos_x + param->act_disp_w - (char_path_len>>1);
-			param->act_pos_y = param->origin_pos_y;
+	if(need_init == (int)E_SET_START_POS_INIT){
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+			param->act_pos_x = (int)param->origin_pos_x;
+			param->act_pos_y = (int)param->origin_pos_y + line_dir_len;
+		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
+			uchar_path_len = (unsigned) char_path_len >> 1;
+			param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
+			param->act_pos_y = (int)param->origin_pos_y;
 		}else{
 			LIB_DBG(DBG_ERR, "[DOWN] Invalid direction writing\n");
 			return;
@@ -769,11 +799,11 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 	iCount = (int)count;
 
 	if(iCount > 0){
-		if(param->usDispMode & CHAR_DISP_MASK_HWRITE){
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
 			do{
 				pos_y = param->act_pos_y + line_dir_len;
-				if ((unsigned int)pos_y > param->origin_pos_y + param->act_disp_h){
-					param->act_pos_y = param->origin_pos_y + line_dir_len;	
+				if ((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h)){
+					param->act_pos_y = (int)param->origin_pos_y + line_dir_len;	
 				}
 				else{
 					param->act_pos_y += line_dir_len;
@@ -781,7 +811,7 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 				param->uiLineNum++;
 				iCount--;
 			}while(iCount > 0);
-		}else if(param->usDispMode & CHAR_DISP_MASK_VWRITE){
+		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
 			if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 				LIB_DBG(DBG_ERR, "[DOWN] - Vertical writing not supported for 1seg.\n");
 				return;
@@ -790,7 +820,8 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 			do{
 				pos_x = param->act_pos_x - char_path_len;
 				if (pos_x <= (int)param->origin_pos_x){
-					param->act_pos_x = param->origin_pos_x + param->act_disp_w - (char_path_len>>1);
+					uchar_path_len = (unsigned) char_path_len >> 1;
+					param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
 				}
 				else{
 					param->act_pos_x -= char_path_len;
@@ -798,6 +829,8 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 				param->uiLineNum++;
 				iCount--;
 			}while(iCount > 0);
+		}else{
+			//MISRA C 2012
 		}
 	}
 	

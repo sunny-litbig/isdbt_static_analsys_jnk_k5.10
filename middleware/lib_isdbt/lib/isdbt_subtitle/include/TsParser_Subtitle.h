@@ -26,8 +26,8 @@ This source code is provided subject to the terms of a Mutual Non-Disclosure
 Agreement between Telechips and Company.
 *
 *******************************************************************************/
-#ifndef __TSPARSER_SUBTITLE_H__
-#define __TSPARSER_SUBTITLE_H__
+#ifndef TSPARSER_SUBTITLE_H__
+#define TSPARSER_SUBTITLE_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,7 +80,7 @@ extern int ISDBT_CC_Convert_Katakana2Unicode(const unsigned char *pInCharCode, u
 extern int ISDBT_CC_Convert_LatinExtension2Unicode(const unsigned char *pInCharCode, unsigned int *pOutUCSCode);
 extern int ISDBT_CC_Convert_Special2Unicode(const unsigned char *pInCharCode, unsigned int *pOutUCSCode);
 
-extern void CCPARS_Init_Process(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index);
+// extern void CCPARS_Init_Process(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index);
 
 extern void CCPARS_Parse_Pos_CRLF(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
 extern void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init);
@@ -92,4 +92,4 @@ extern void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count,
 }
 #endif
 
-#endif	/* __TSPARSER_SUBTITLE_H__ */
+#endif	/* TSPARSER_SUBTITLE_H__ */
