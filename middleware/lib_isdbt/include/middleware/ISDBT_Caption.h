@@ -26,8 +26,8 @@ This source code is provided subject to the terms of a Mutual Non-Disclosure
 Agreement between Telechips and Company.
 *
 *******************************************************************************/
-#ifndef __ISDBT_CAPTION_H__
-#define __ISDBT_CAPTION_H__
+#ifndef ISDBT_CAPTION_H__
+#define ISDBT_CAPTION_H__
 
 #define	LCD_ROT0L			0
 #define	LCD_ROT90L			1
@@ -737,7 +737,7 @@ typedef struct{
 }T_SUB_CONTEXT;
 
 extern int ISDBTCap_ControlCharDisp(T_SUB_CONTEXT *p_sub_ctx, int mngr, unsigned int ucControlType, unsigned int param1, unsigned int param2, unsigned int param3);
-extern void CCPARSE_Set_FontSize(unsigned int width, unsigned int height);
+// extern void CCPARSE_Set_FontSize(unsigned int width, unsigned int height);
 
 extern void CCPARS_Set_Lang(int data_type, int lang_index);
 extern int CCPARS_Get_Lang(int data_type);
@@ -756,4 +756,4 @@ extern int ISDBT_CC_Is_NonSpace(unsigned char *pInCharCode);
 extern int ISDBT_CC_Is_RuledLineChar(unsigned int iCharData);
 extern int CCPARS_Bitmap_Process(T_SUB_CONTEXT *p_sub_ctx, void *handle, void *pRawData, int size);
 
-#endif /* __ISDBT_CAPTION_H__ */
+#endif /* ISDBT_CAPTION_H__ */

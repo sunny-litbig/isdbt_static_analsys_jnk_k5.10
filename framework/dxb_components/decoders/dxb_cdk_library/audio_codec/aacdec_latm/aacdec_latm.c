@@ -33,6 +33,11 @@ int latm_parser_get_frame( void *pLatmHandle, unsigned char *pucPacketDataPtr, i
 int latm_parser_get_header_type( void *pLatmHandle );
 int latm_parser_flush_buffer( void *pLatmHandle );
 
+void* Latm_Init( unsigned char *pucPacketDataPtr, unsigned int piDataLength, int *piSamplingFrequency, int *piChannelNumber, void *psCallback, int eFormat );
+int Latm_Close( void *pLatm );
+int Latm_GetFrame( void *pLatmHandle, unsigned char *pucPacketDataPtr, int iStreamLength, unsigned char **pucAACRawDataPtr, int *piAACRawDataLength, unsigned int uiInitFlag );
+int Latm_GetHeaderType( void *pLatmHandle );
+int Latm_FlushBuffer( void *pLatmHandle );
 
 void* Latm_Init( unsigned char *pucPacketDataPtr, unsigned int piDataLength, int *piSamplingFrequency, int *piChannelNumber, void *psCallback, int eFormat )
 {

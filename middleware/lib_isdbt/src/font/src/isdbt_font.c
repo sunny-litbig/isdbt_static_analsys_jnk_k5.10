@@ -1436,8 +1436,8 @@ int isdbt_font_VerticalTableSize(void)
 {
 	int size=0;
 
-	if (sizeof(struct _VerRotTable_) != 0u){
+	// if (sizeof(struct _VerRotTable_) != 0u){
 		size = (int) sizeof(stVerRotTable) / (int) sizeof(struct _VerRotTable_);
-	}
+	// }
 	return size;
 }

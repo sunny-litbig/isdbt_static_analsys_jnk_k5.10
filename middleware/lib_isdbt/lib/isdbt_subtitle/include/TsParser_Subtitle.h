@@ -60,7 +60,7 @@ extern unsigned short ISDBT_EPG_ConvertCharString
 extern int CCPARS_Init(SUB_ARCH_TYPE type);
 extern int CCPARS_Exit(void);
 
-extern void CCPARS_Parse_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int data);
+// extern void CCPARS_Parse_Init(T_SUB_CONTEXT *p_sub_ctx, int mngr, int index, int data);
 extern int subtitle_lib_comp_grp_type(int data_type);
 
 extern int subtitle_lib_mngr_grp_changed(int data_type);
