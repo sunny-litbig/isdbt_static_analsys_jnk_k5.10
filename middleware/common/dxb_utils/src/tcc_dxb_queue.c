@@ -30,8 +30,7 @@ Agreement between Telechips and Company.
 #include <stdlib.h>
 #include <string.h>
 
-// #include "tcc_dxb_queue.h"
-#include "../include/tcc_dxb_queue.h"
+#include "tcc_dxb_queue.h"
 
 /** Initialize a queue descriptor
  * 

@@ -38,7 +38,7 @@ Agreement between Telechips and Company.
 /******************************************************************************
 * defines 
 ******************************************************************************/
-#define	_APPLICATION_VERSION_   "001"
+#define	_APPLICATION_VERSION_   "011"
 #define _DXB_SERVICE_VER_        "DXB_SERVICE_VER_"_APPLICATION_VERSION_
 #define _DXB_SERVICE_PATCH_VER_  _DXB_SERVICE_VER_""
 

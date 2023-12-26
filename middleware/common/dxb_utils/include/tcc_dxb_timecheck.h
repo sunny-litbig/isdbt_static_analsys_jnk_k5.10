@@ -26,8 +26,8 @@ This source code is provided subject to the terms of a Mutual Non-Disclosure
 Agreement between Telechips and Company.
 *
 *******************************************************************************/
-// #include <time.h>
-#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/time.h"
+#include <time.h>
+
 #ifdef __cplusplus
 extern    "C"
 {

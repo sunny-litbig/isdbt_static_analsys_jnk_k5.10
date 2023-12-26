@@ -29,10 +29,10 @@ Agreement between Telechips and Company.
 /******************************************************************************
 * include
 ******************************************************************************/
-#include "../include/tcc_dxb_memory.h"
+#include "tcc_dxb_memory.h"
 #define LOG_TAG	"tcc_dxb_memory"
-// #include <utils/Log.h>
-#include "../../../../linux/system/include/utils/Log.h"
+#include <utils/Log.h>
+
 
 //#define TCC_MW_MEMORYLEAKCHECK
 

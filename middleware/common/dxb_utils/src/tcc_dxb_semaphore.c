@@ -31,13 +31,12 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-// #include <pthread.h>
-#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/pthread.h"
+#include <pthread.h>
 #include <sys/time.h>
 #include <errno.h>
 
-#include "../include/tcc_dxb_semaphore.h"
-#include "../../../../os/include/tcc_pthread_cond.h"
+#include "tcc_dxb_semaphore.h"
+#include <tcc_pthread_cond.h>
 
 /** Initializes the semaphore at a given value
  * 

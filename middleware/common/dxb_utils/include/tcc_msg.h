@@ -28,10 +28,9 @@ Agreement between Telechips and Company.
 *******************************************************************************/
 #ifndef	_TCC_MSG_H__
 #define	_TCC_MSG_H__
-// #include <stdlib.h>
-// #include <pthread.h>
-#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/stdlib.h"
-#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/pthread.h"
+#include <stdlib.h>
+#include <pthread.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

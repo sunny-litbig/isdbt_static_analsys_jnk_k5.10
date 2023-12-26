@@ -26,4 +26,4 @@ This source code is provided subject to the terms of a Mutual Non-Disclosure
 Agreement between Telechips and Company.
 *
 *******************************************************************************/
-#include "../include/tcc_msg.h"
+#include "tcc_msg.h"

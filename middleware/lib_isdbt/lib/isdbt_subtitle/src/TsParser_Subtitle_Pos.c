@@ -442,6 +442,7 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 	unsigned int uchar_path_len = 0; 
 	unsigned int uline_dir_len = 0;
 	int temp = mngr;
+	int LB_RETURN = 1;
 
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 	LIB_DBG(DBG_C0, "[FORWARD] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d\n",  
@@ -477,93 +478,96 @@ void CCPARS_Parse_Pos_Forward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int
 			param->uiCharNumInLine = 0;
 		}else{
 			LIB_DBG(DBG_ERR, "[FORWARD] Invalid direction writing\n");
-			return;
+			// return;
+			LB_RETURN = 0;
 		}
 	}
-	
-	/* Get a forward count. */
-	iCount = (int)count;	
+	if(LB_RETURN != 0){
+		/* Get a forward count. */
+		iCount = (int)count;	
 
-	if(iCount > 0){
-		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
-			if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
-				param->uiRepeatCharCount = ((param->origin_pos_x + param->act_disp_w - (unsigned)param->act_pos_x)/(unsigned)char_path_len);
-				param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
-			}
-			
-			/* Set the active position to forward one. - param1 is font width */
-			do
-			{
-				pos_x = param->act_pos_x + char_path_len;
+		if(iCount > 0){
+			if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+				if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
+					param->uiRepeatCharCount = ((param->origin_pos_x + param->act_disp_w - (unsigned)param->act_pos_x)/(unsigned)char_path_len);
+					param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
+				}
 
+				/* Set the active position to forward one. - param1 is font width */
+				do
+				{
+					pos_x = param->act_pos_x + char_path_len;
+
+					if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
+						/* APF is not used in 1Seg */
+						char_path_limit_check = ((unsigned int)pos_x > (param->origin_pos_x + param->act_disp_w))?1:0;
+					}
+					else{
+						char_path_limit_check = ((unsigned int)pos_x >= (param->origin_pos_x + param->act_disp_w))?1:0;
+					}
+
+					if(char_path_limit_check!=0){
+						param->act_pos_x = (int)param->origin_pos_x;
+						pos_y = param->act_pos_y + line_dir_len;
+
+						if((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h)){
+							param->act_pos_y = (int)param->origin_pos_y + line_dir_len;
+						}else{
+							param->act_pos_y += line_dir_len;
+						}
+						param->uiLineNum++;
+					}else{
+						param->act_pos_x += char_path_len;
+					}
+					iCount--;
+				} while (iCount > 0);
+			}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
 				if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
-					/* APF is not used in 1Seg */
-					char_path_limit_check = ((unsigned int)pos_x > (param->origin_pos_x + param->act_disp_w))?1:0;
+					LIB_DBG(DBG_ERR, "[FORWARD] - Vertical writing not supported for 1seg.\n");
+					// return;
 				}
 				else{
-					char_path_limit_check = ((unsigned int)pos_x >= (param->origin_pos_x + param->act_disp_w))?1:0;
-				}
-
-				if(char_path_limit_check!=0){
-					param->act_pos_x = (int)param->origin_pos_x;
-					pos_y = param->act_pos_y + line_dir_len;
-
-					if((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h)){
-						param->act_pos_y = (int)param->origin_pos_y + line_dir_len;
-					}else{
-						param->act_pos_y += line_dir_len;
+					if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
+						param->uiRepeatCharCount = ((param->origin_pos_y + param->act_disp_h - (unsigned)param->act_pos_y)/(unsigned)line_dir_len);
+						param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
 					}
-					param->uiLineNum++;
-				}else{
-					param->act_pos_x += char_path_len;
+
+					do
+					{
+						pos_y = param->act_pos_y + line_dir_len;
+
+						if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
+							/* APF is not used in 1Seg */
+						line_dir_limit_check = ((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h))?1:0;
+						}
+						else{
+							line_dir_limit_check = ((unsigned int)pos_y >= (param->origin_pos_y + param->act_disp_h))?1:0;
+						}
+
+						if(line_dir_limit_check !=0){
+							param->act_pos_y = (int)param->origin_pos_y;
+							pos_x = param->act_pos_x - char_path_len;
+
+							if(pos_x <= (int)param->origin_pos_x){
+								uchar_path_len = (unsigned) char_path_len >> 1;
+								param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
+							}else{
+								param->act_pos_x -= char_path_len;
+							}
+							param->uiLineNum++;
+						}else{
+							param->act_pos_y += line_dir_len;
+						}
+						iCount--;
+					} while (iCount > 0);
 				}
-				iCount--;
-			} while (iCount > 0);
-		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
-			if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
-				LIB_DBG(DBG_ERR, "[FORWARD] - Vertical writing not supported for 1seg.\n");
-				return;
+			}else{
+				//MISRA C 2012
 			}
-			
-			if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
-				param->uiRepeatCharCount = ((param->origin_pos_y + param->act_disp_h - (unsigned)param->act_pos_y)/(unsigned)line_dir_len);
-				param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
-			}
-
-			do
-			{
-				pos_y = param->act_pos_y + line_dir_len;
-
-				if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
-					/* APF is not used in 1Seg */
-				line_dir_limit_check = ((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h))?1:0;
-				}
-				else{
-					line_dir_limit_check = ((unsigned int)pos_y >= (param->origin_pos_y + param->act_disp_h))?1:0;
-				}
-
-				if(line_dir_limit_check !=0){
-					param->act_pos_y = (int)param->origin_pos_y;
-					pos_x = param->act_pos_x - char_path_len;
-
-					if(pos_x <= (int)param->origin_pos_x){
-						uchar_path_len = (unsigned) char_path_len >> 1;
-						param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
-					}else{
-						param->act_pos_x -= char_path_len;
-					}
-					param->uiLineNum++;
-				}else{
-					param->act_pos_y += line_dir_len;
-				}
-				iCount--;
-			} while (iCount > 0);
-		}else{
-			//MISRA C 2012
-		}
-	}	
+		}	
 	LIB_DBG(DBG_C0, "[FORWARD] - ACT[%d:%d], line:%d\n", \
 		param->act_pos_x, param->act_pos_y, param->uiLineNum);
+	}
 }
 
 void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init)		
@@ -577,6 +581,8 @@ void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, in
 	unsigned int uchar_path_len = 0;
 	unsigned int uline_dir_len	= 0;
 	int temp = mngr;
+	int LB_RETURN = 1;
+
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 
 	LIB_DBG(DBG_C0, "[BACKWARD] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d, need_init:%d\n",  
@@ -612,69 +618,71 @@ void CCPARS_Parse_Pos_Backward(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, in
 			param->uiCharNumInLine = 0;
 		}else{
 			LIB_DBG(DBG_ERR, "[FORWARD] Invalid direction writing\n");
-			return;
+			// return;
+			LB_RETURN = 0;
 		}
 	}
+	if(LB_RETURN != 0){
+		iCount = (int)count;
 
-	iCount = (int)count;
+		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+			/* Set the active position to forward one. - param1 is font width */
+			do
+			{
+				pos_x = param->act_pos_x - char_path_len;
 
-	if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
-		/* Set the active position to forward one. - param1 is font width */
-		do
-		{
-			pos_x = param->act_pos_x - char_path_len;
-
-			if(pos_x < 0){
-				param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - char_path_len;
-				pos_y = param->act_pos_y - line_dir_len;
-				if(pos_y <= 0){
-					param->act_pos_y = ((int)param->origin_pos_y + (int)param->act_disp_h);
+				if(pos_x < 0){
+					param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - char_path_len;
+					pos_y = param->act_pos_y - line_dir_len;
+					if(pos_y <= 0){
+						param->act_pos_y = ((int)param->origin_pos_y + (int)param->act_disp_h);
+					}else{
+						param->act_pos_y -= line_dir_len;
+					}
+					param->uiLineNum--;
 				}else{
-					param->act_pos_y -= line_dir_len;
+					param->act_pos_x -= char_path_len;
 				}
-				param->uiLineNum--;
-			}else{
-				param->act_pos_x -= char_path_len;
+				iCount--;
+			} while (iCount > 0);
+		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
+			if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
+				LIB_DBG(DBG_ERR, "[BACKWARD] - Vertical writing not supported for 1seg.\n");
+				// return;
 			}
-			iCount--;
-		} while (iCount > 0);
-	}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
-		if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
-			LIB_DBG(DBG_ERR, "[BACKWARD] - Vertical writing not supported for 1seg.\n");
-			return;
-		}
-		
-		if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
-			param->uiRepeatCharCount = ((param->origin_pos_y - (unsigned)param->act_pos_y)/(unsigned)line_dir_len);
-			param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
-		}
-
-		do
-		{
-			pos_y = param->act_pos_y - line_dir_len;
-			line_dir_limit_check = (pos_y < (int)param->origin_pos_y)?1:0;
-
-			if(line_dir_limit_check!=0){
-				pos_x = param->act_pos_x + char_path_len;				
-
-				if(pos_x >= ((int)param->origin_pos_x + (int)param->act_disp_w)){
-					uchar_path_len = (unsigned) char_path_len >> 1;
-					param->act_pos_x = (int)param->origin_pos_x + ((int)uchar_path_len);
-				}else{
-					param->act_pos_x += char_path_len;
+			else{
+				if((param->usDispMode & CHAR_DISP_MASK_REPEAT)!=0u){
+					param->uiRepeatCharCount = ((param->origin_pos_y - (unsigned)param->act_pos_y)/(unsigned)line_dir_len);
+					param->usDispMode &= ~(CHAR_DISP_MASK_REPEAT);
 				}
-				param->act_pos_y = (int)param->origin_pos_y + (int)param->act_disp_h - line_dir_len;				
-				param->uiLineNum--;
-			}else{
-				param->act_pos_y -= line_dir_len;
+
+				do
+				{
+					pos_y = param->act_pos_y - line_dir_len;
+					line_dir_limit_check = (pos_y < (int)param->origin_pos_y)?1:0;
+
+					if(line_dir_limit_check!=0){
+						pos_x = param->act_pos_x + char_path_len;				
+
+						if(pos_x >= ((int)param->origin_pos_x + (int)param->act_disp_w)){
+							uchar_path_len = (unsigned) char_path_len >> 1;
+							param->act_pos_x = (int)param->origin_pos_x + ((int)uchar_path_len);
+						}else{
+							param->act_pos_x += char_path_len;
+						}
+						param->act_pos_y = (int)param->origin_pos_y + (int)param->act_disp_h - line_dir_len;				
+						param->uiLineNum--;
+					}else{
+						param->act_pos_y -= line_dir_len;
+					}
+					iCount--;
+				} while (iCount > 0);
 			}
-			iCount--;
-		} while (iCount > 0);
-	}else{
-		//MISRA C 2012
-	}
-	
+		}else{
+			//MISRA C 2012
+		}
 	LIB_DBG(DBG_C0, "[BACKWARD] - ACT[%d:%d], line:%d", param->act_pos_x, param->act_pos_y, param->uiLineNum);
+	}
 }
 
 void CCPARS_Parse_Pos_Up(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need_init)		
@@ -727,20 +735,21 @@ void CCPARS_Parse_Pos_Up(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int need
 	}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
 		if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
 			LIB_DBG(DBG_ERR, "[UP] - Vertical writing not supported for 1seg.\n");
-			return;
+			// return;
 		}
-
-		do{
-			pos_x = param->act_pos_x + char_path_len;
-			if(pos_x >= ((int)param->origin_pos_x + (int)param->act_disp_w)){
-				uchar_path_len = (unsigned) char_path_len >> 1;
-				param->act_pos_x = (int)param->origin_pos_x + ((int)uchar_path_len);
-			}else{
-				param->act_pos_x += char_path_len;
-			}
-			param->uiLineNum--;
-			iCount--;
-		}while(iCount > 0);
+		else{
+			do{
+				pos_x = param->act_pos_x + char_path_len;
+				if(pos_x >= ((int)param->origin_pos_x + (int)param->act_disp_w)){
+					uchar_path_len = (unsigned) char_path_len >> 1;
+					param->act_pos_x = (int)param->origin_pos_x + ((int)uchar_path_len);
+				}else{
+					param->act_pos_x += char_path_len;
+				}
+				param->uiLineNum--;
+				iCount--;
+			}while(iCount > 0);
+		}
 	}else{
 		//MISRA C 2012
 	}
@@ -758,6 +767,8 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 	unsigned int uchar_path_len = 0; 
 	unsigned int uline_dir_len	= 0;
 	int temp = mngr;
+	int LB_RETURN = 1;
+
 	param = (T_CHAR_DISP_INFO*)&p_sub_ctx->disp_info;
 
 	LIB_DBG(DBG_C0, "[DOWN] - Font[%d:%d,%d:%d], Start[%d:%d], Active[%d:%d:%d:%d], Mode:0x%X, count:%d, line:%d, need_init:%d\n",  
@@ -792,47 +803,49 @@ void CCPARS_Parse_Pos_Down(T_SUB_CONTEXT *p_sub_ctx, int mngr, int count, int ne
 			param->act_pos_y = (int)param->origin_pos_y;
 		}else{
 			LIB_DBG(DBG_ERR, "[DOWN] Invalid direction writing\n");
-			return;
+			// return;
+			LB_RETURN = 0;
 		}
 	}
+	if(LB_RETURN != 0){
+		iCount = (int)count;
 
-	iCount = (int)count;
-
-	if(iCount > 0){
-		if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
-			do{
-				pos_y = param->act_pos_y + line_dir_len;
-				if ((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h)){
-					param->act_pos_y = (int)param->origin_pos_y + line_dir_len;	
+		if(iCount > 0){
+			if((param->usDispMode & CHAR_DISP_MASK_HWRITE)!=0u){
+				do{
+					pos_y = param->act_pos_y + line_dir_len;
+					if ((unsigned int)pos_y > (param->origin_pos_y + param->act_disp_h)){
+						param->act_pos_y = (int)param->origin_pos_y + line_dir_len;	
+					}
+					else{
+						param->act_pos_y += line_dir_len;
+					}
+					param->uiLineNum++;
+					iCount--;
+				}while(iCount > 0);
+			}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
+				if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
+					LIB_DBG(DBG_ERR, "[DOWN] - Vertical writing not supported for 1seg.\n");
+					// return;
 				}
 				else{
-					param->act_pos_y += line_dir_len;
+					do{
+						pos_x = param->act_pos_x - char_path_len;
+						if (pos_x <= (int)param->origin_pos_x){
+							uchar_path_len = (unsigned) char_path_len >> 1;
+							param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
+						}
+						else{
+							param->act_pos_x -= char_path_len;
+						}
+						param->uiLineNum++;
+						iCount--;
+					}while(iCount > 0);
 				}
-				param->uiLineNum++;
-				iCount--;
-			}while(iCount > 0);
-		}else if((param->usDispMode & CHAR_DISP_MASK_VWRITE)!=0u){
-			if((param->dtv_type == ONESEG_ISDB_T) || (param->dtv_type == ONESEG_SBTVD_T)){
-				LIB_DBG(DBG_ERR, "[DOWN] - Vertical writing not supported for 1seg.\n");
-				return;
+			}else{
+				//MISRA C 2012
 			}
-
-			do{
-				pos_x = param->act_pos_x - char_path_len;
-				if (pos_x <= (int)param->origin_pos_x){
-					uchar_path_len = (unsigned) char_path_len >> 1;
-					param->act_pos_x = (int)param->origin_pos_x + (int)param->act_disp_w - ((int)uchar_path_len);
-				}
-				else{
-					param->act_pos_x -= char_path_len;
-				}
-				param->uiLineNum++;
-				iCount--;
-			}while(iCount > 0);
-		}else{
-			//MISRA C 2012
 		}
-	}
-	
 	LIB_DBG(DBG_C0, "[DOWN] - ACT[%d:%d], line:%d", param->act_pos_x, param->act_pos_y, param->uiLineNum);
+	}
 }

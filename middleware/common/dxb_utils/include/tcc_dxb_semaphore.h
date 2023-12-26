@@ -36,8 +36,8 @@ Agreement between Telechips and Company.
 #ifndef __TCC_DXB_SEMAPHORE_H__
 #define __TCC_DXB_SEMAPHORE_H__
 
-// #include <pthread.h>
-#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/pthread.h"
+#include <pthread.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

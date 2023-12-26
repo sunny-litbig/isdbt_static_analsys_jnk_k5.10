@@ -41,7 +41,7 @@ Agreement between Telechips and Company.
 #include <stdio.h>  	/* for printf() */
 #endif
 
-#include "../../../../middleware/common/dxb_utils/include/LB_debug_log.h"
+#include "LB_debug_log.h"
 
 
 #ifndef ALOGV

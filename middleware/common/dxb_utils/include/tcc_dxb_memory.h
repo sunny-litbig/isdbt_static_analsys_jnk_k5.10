@@ -32,8 +32,7 @@ Agreement between Telechips and Company.
 /******************************************************************************
 * include 
 ******************************************************************************/
-// #include <stdlib.h>
-#include "../../../../toolchain/sysroots/cortexa53hf-neon-fp-armv8-telechips-linux-gnueabi/usr/include/stdlib.h"
+#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
