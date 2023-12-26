@@ -107,7 +107,7 @@ ifeq ($(TCC_DXB_BROADCAST_TASK),Y)
      #	      ISDBT FULL SEG
      #-------------------------------#
 	DXB_BROADCAST_ISDBT_FULLSEG = Y
-	TRMP_ENABLE = N
+	TRMP_ENABLE = Y
      #-------------------------------#
      #	      DTV DUMP UTIL
      #-------------------------------#
